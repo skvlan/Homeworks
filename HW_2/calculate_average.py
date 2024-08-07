@@ -12,8 +12,8 @@ def calculate_average():
     column_name = request.args.get('column', default='Height(Inches)')
     column_name_1 = request.args.get('column1', default='Weight(Pounds)')
 
-    #if column_name not in df or column_name_1 not in df:
-    #    return "Column doesn't found", 400
+    if column_name not in df or column_name_1 not in df:
+        return "Column doesn't found", 400
 
     average_height = df[column_name].mean()
     average_weight = df[column_name_1].mean()
