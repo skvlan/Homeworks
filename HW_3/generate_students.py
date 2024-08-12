@@ -4,7 +4,7 @@ import requests
 import csv
 import io
 from webargs import fields
-from webargs.flaskparser import use_args, parser
+from webargs.flaskparser import use_args, parser, abort
 
 
 app = Flask(__name__)
@@ -49,7 +49,7 @@ def get_available_currencies():
     return []
 
 available_currencies = get_available_currencies()
-'''
+
 def validate_currency_code(value):
     if value.upper() not in available_currencies:
         raise ValueError("Currency not found")
@@ -68,9 +68,6 @@ args_schema = {
         error_messages={"invalid": "The amount must be a number."}
     )
 }
-
-'''
-
 
 def get_symbol(currency_code):
     url = "https://bitpay.com/currencies"
@@ -101,10 +98,10 @@ def get_bitcoin_value(currency_code='USD', bitcoin_amount=1):
 
 
 @app.route('/bitcoin_rate')
-#@use_args(args_schema, location="query")
-def bitcoin_rate():
-    currency_code = request.args.get('currency', default='USD')
-    bitcoin_amount = float(request.args.get('convert', default=1))
+@use_args(args_schema, location="query")
+def bitcoin_rate(args):
+    currency_code = args['currency']
+    bitcoin_amount = args['convert']
 
     result = get_bitcoin_value(currency_code, bitcoin_amount)
 
@@ -113,9 +110,9 @@ def bitcoin_rate():
     else:
         return jsonify({"error": "Error retrieving data from API"}), 400
 
-#@parser.error_handler
-#def handle_request_parsing_error(err, req, schema, *, error_status_code, error_headers):
-#    abort(jsonify(err.messages), 400)
+@parser.error_handler
+def handle_request_parsing_error(err, req, schema, *, error_status_code, error_headers):
+    abort(jsonify(err.messages), 400)
 
 if __name__ == '__main__':
     app.run(
