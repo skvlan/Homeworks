@@ -1,13 +1,20 @@
 from flask import Flask, request, jsonify
 from HW_4.database_handler import execute_query
+from webargs import fields
+from webargs.flaskparser import use_args
+
 
 
 app = Flask(__name__)
 
+order_price_args = {
+        "country": fields.Str(required=False)
+    }
 
 @app.route('/order-price')
-def order_price():
-    country = request.args.get('country', None)
+@use_args(order_price_args, location="query")
+def order_price(args):
+    country = args.get('country')
 
     query = """
     SELECT inv.BillingCountry, SUM(ii.UnitPrice * ii.Quantity) AS TotalSales FROM invoices AS inv
@@ -42,8 +49,6 @@ def get_all_info_about_track(track_id):
 
     if track_info:
         return jsonify(track_info[0])
-    else:
-        return jsonify({"error": "Track not found"}), 404
 
 
 
