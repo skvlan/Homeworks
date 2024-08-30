@@ -55,26 +55,19 @@ print('SUCCESS!')
 class colorizer:
     def __init__(self, color):
         self.color = color
-
+        self.color_dict = {
+            'red': Fore.RED,
+            'black': Fore.BLACK,
+            'green': Fore.GREEN,
+            'yellow': Fore.YELLOW,
+            'blue': Fore.BLUE,
+            'magenta': Fore.MAGENTA,
+            'cyan': Fore.CYAN,
+            'white': Fore.WHITE
+        }
 
     def __enter__(self):
-        if self.color == 'red':
-            print(Fore.RED, end='')
-        elif self.color == 'black':
-            print(Fore.BLACK, end='')
-        elif self.color == 'green':
-            print(Fore.GREEN, end='')
-        elif self.color == 'yellow':
-            print(Fore.YELLOW, end='')
-        elif self.color == 'blue':
-            print(Fore.BLUE, end='')
-        elif self.color == 'magenta':
-            print(Fore.MAGENTA, end='')
-        elif self.color == 'cyan':
-            print(Fore.CYAN, end='')
-        elif self.color == 'white':
-            print(Fore.WHITE, end='')
-
+        print(self.color_dict.get(self.color, ''), end='')
         return self
 
     def __exit__(self, type, value, traceback):
