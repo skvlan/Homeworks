@@ -18,7 +18,7 @@ def generate_students():
     output = io.StringIO()
     writer = csv.writer(output)
 
-    writer.writerow(['Name', ' Last Name', '    Email', '          Password', '       Age'])
+    writer.writerow(['Name', ' Last Name', '    Email', '          Password', '       Birthdate'])
 
     for _ in range(number_of_students):
         writer.writerow([
@@ -26,7 +26,7 @@ def generate_students():
             faker_instance.last_name(),
             faker_instance.email(),
             faker_instance.password(length=12, special_chars=True, digits=True, upper_case=True, lower_case=True),
-            faker_instance.random_int(min=18, max=60)
+            faker_instance.date_of_birth(minimum_age=18, maximum_age=60)
         ])
 
     output.seek(0)
@@ -38,7 +38,7 @@ def generate_students():
     )
 
 
-"""get_bitcoin_value"""
+
 
 def get_available_currencies():
     url = "https://bitpay.com/api/rates"
