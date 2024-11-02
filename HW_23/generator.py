@@ -1,23 +1,23 @@
 import random
-import string
+import nltk
+from nltk.corpus import words
+
 
 def generator_of_unique_words(word_count: int):
     if not (1 <= word_count <= 10_000):
         raise ValueError("word_count must be between 1 and 10000")
 
-    unique_words = set()
-    word_lengths = range(3, 10)
-    words = string.ascii_lowercase
+    english_words = {word.lower() for word in words.words() if 3 <= len(word) <= 10}
 
-    while len(unique_words) < word_count:
-        words_batch = {
-            ''.join(random.choices(words, k=random.choice(word_lengths)))
-            for _ in range(word_count - len(unique_words))
-        }
-        unique_words.update(words_batch)
+    english_words = list(english_words)
 
-    return iter(unique_words)
+    if word_count > len(english_words):
+        raise ValueError("word_count must be between 1 and 10000")
 
+    unique_words = random.sample(english_words, word_count)
+
+    for word in unique_words:
+        yield word
 
 for word in generator_of_unique_words(10_000):
     print(word)
